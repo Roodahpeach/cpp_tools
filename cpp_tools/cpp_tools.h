@@ -42,5 +42,6 @@ public:
 
 	//날짜, 시간 얻어오기
 	string Date_GetDateNTime();
+	string Date_GetDateNTime_ForFileName();
 	string Date_GetTime();
 };

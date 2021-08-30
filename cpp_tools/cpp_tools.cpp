@@ -2,9 +2,10 @@
 
 bool cpp_tools::Log_Start(string log_file_name)
 {
-    cpp_tools::log_file_name = log_file_name + "_" + cpp_tools::Date_GetDateNTime() + ".csv";
+    cpp_tools::log_file_name = log_file_name + "_" + cpp_tools::Date_GetDateNTime_ForFileName() + ".csv";
     cpp_tools::logfile_ofstream.open(cpp_tools::log_file_name); //Log_시간.csv 저장
-    return true;
+    bool result = logfile_ofstream.fail();
+    return !result;
 }
 
 bool cpp_tools::Log_Add(string str)
@@ -56,6 +57,37 @@ string cpp_tools::Date_GetDateNTime()
     out_str += to_string(curr_second);
 
     return out_str;
+}
+
+string cpp_tools::Date_GetDateNTime_ForFileName()
+{
+    struct tm curr_tm;
+    time_t curr_time = time(nullptr);
+
+    localtime_s(&curr_tm, &curr_time);
+
+    int curr_month = curr_tm.tm_mon + 1;
+    int curr_day = curr_tm.tm_mday;
+    int curr_hour = curr_tm.tm_hour;
+    int curr_minute = curr_tm.tm_min;
+    int curr_second = curr_tm.tm_sec;
+
+    string out_str;
+
+    out_str += to_string(curr_month);
+    out_str += "월";
+    out_str += to_string(curr_day);
+    out_str += "일-";
+    out_str += to_string(curr_hour);
+    out_str += "시";
+    out_str += to_string(curr_minute);
+    out_str += "분";
+    out_str += to_string(curr_second);
+    out_str += "초";
+
+    return out_str;
+
+    return string();
 }
 
 string cpp_tools::Date_GetTime()
