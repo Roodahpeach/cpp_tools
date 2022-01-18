@@ -1,5 +1,21 @@
 #include "cpp_tools.h"
 
+bool cpp_tools::Init_cpptools(string log_file_name)
+{
+	TicksPerSec = 0;
+	this->Log_Start(log_file_name);
+	this->Stopwatch_Start();
+	return true;
+}
+
+bool cpp_tools::End_cpptools()
+{
+	this->Log_End();
+	this->Stopwatch_End();
+	return true;
+}
+
+
 bool cpp_tools::Log_Start(string log_file_name)
 {
 	cpp_tools::log_file_name = log_file_name + "_" + cpp_tools::Date_GetDateNTime_ForFileName() + ".csv";
@@ -29,7 +45,7 @@ bool cpp_tools::Log_Endline()
 	return false;
 }
 
-bool cpp_tools::Log_end()
+bool cpp_tools::Log_End()
 {
 	if (this->logfile_ofstream.is_open()) {
 		cpp_tools::logfile_ofstream.close();
@@ -149,42 +165,72 @@ __int64 cpp_tools::Stopwatch_GetQPCTick(void)
 
 bool cpp_tools::Stopwatch_Start()
 {
-	this->_Stopwatch_Length = 0;
 	return this->Stopwatch_GetQPF(&this->TicksPerSec);
 }
 
 bool cpp_tools::Stopwatch_End()
 {
-	this->_Stopwatch_Length = 0;
 	this->TicksPerSec = 0;
+	this->Tick_Array_Start.clear();
+	this->Tick_Array_End.clear();
 	return true;
 }
 
 int cpp_tools::Stopwatch_Length()
 {
-	return this->_Stopwatch_Length;
+	return min(this->Tick_Array_End.size(), this->Tick_Array_Start.size());
+}
+
+
+bool cpp_tools::Stopwatch_Check_Startpoint()
+{
+	this->Tick_Array_Start.push_back(cpp_tools::Stopwatch_GetQPCTick());
+	return true;
 }
 
 bool cpp_tools::Stopwatch_Check_Startpoint(int checkpoint_index)
 {
+	if (checkpoint_index >= this->Stopwatch_Length()) {
+		this->Tick_Array_Start.resize(checkpoint_index+1);
+	}
 	this->Tick_Array_Start[checkpoint_index] = cpp_tools::Stopwatch_GetQPCTick();
+
+	return true;
+}
+
+bool cpp_tools::Stopwatch_Check_Endpoint() {
+
+	this->Tick_Array_End.push_back(cpp_tools::Stopwatch_GetQPCTick());
 	return true;
 }
 
 bool cpp_tools::Stopwatch_Check_Endpoint(int checkpoint_index) {
-	this->_Stopwatch_Length++;
+	if (checkpoint_index >= this->Stopwatch_Length()) {
+		this->Tick_Array_End.resize(checkpoint_index + 1);
+	}
 	this->Tick_Array_End[checkpoint_index] = cpp_tools::Stopwatch_GetQPCTick();
 	return true;
 }
 
 float cpp_tools::Stopwatch_GetTime_s(int checkpoint_index)
 {
-	return ((float)(Tick_Array_End[checkpoint_index] - Tick_Array_Start[checkpoint_index]) / this->TicksPerSec);
+	if (checkpoint_index < this->Stopwatch_Length()) {
+		return ((float)(Tick_Array_End[checkpoint_index] - Tick_Array_Start[checkpoint_index]) / this->TicksPerSec);
+	}
+	else {
+		return -1;
+	}
+	
 }
 
 float cpp_tools::Stopwatch_GetTime_ms(int checkpoint_index)
 {
-	return ((float)(Tick_Array_End[checkpoint_index] - Tick_Array_Start[checkpoint_index]) / this->TicksPerSec) * 1000;
+	if (checkpoint_index < this->Stopwatch_Length()) {
+		return ((float)(Tick_Array_End[checkpoint_index] - Tick_Array_Start[checkpoint_index]) / this->TicksPerSec) * 1000;
+	}
+	else {
+		return -1;
+	}
 }
 
 //=====================================================================================================
