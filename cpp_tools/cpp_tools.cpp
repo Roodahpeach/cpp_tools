@@ -1,5 +1,7 @@
 #include "cpp_tools.h"
 
+//=====================================================================================================
+
 bool cpp_tools::Init_cpptools(string log_file_name)
 {
 	TicksPerSec = 0;
@@ -15,6 +17,7 @@ bool cpp_tools::End_cpptools()
 	return true;
 }
 
+//=====================================================================================================
 
 bool cpp_tools::Log_Start(string log_file_name)
 {
@@ -32,6 +35,13 @@ bool cpp_tools::Log_Add(string str)
 		return true;
 	}
 	return false;
+}
+
+bool cpp_tools::Log_Add_Stopwatch(int index, int time_unit)
+{
+	Log_Add(to_string(this->Stopwatch_GetTime(index, time_unit)));
+
+	return true;
 }
 
 bool cpp_tools::Log_Endline()
@@ -54,7 +64,7 @@ bool cpp_tools::Log_End()
 	return false;
 }
 
-
+//=====================================================================================================
 
 string cpp_tools::Date_GetDateNTime()
 {
@@ -181,6 +191,13 @@ int cpp_tools::Stopwatch_Length()
 	return min(this->Tick_Array_End.size(), this->Tick_Array_Start.size());
 }
 
+bool cpp_tools::Stopwatch_Reset()
+{
+	this->Tick_Array_Start.clear();
+	this->Tick_Array_End.clear();
+	return true;
+}
+
 
 bool cpp_tools::Stopwatch_Check_Startpoint()
 {
@@ -212,25 +229,26 @@ bool cpp_tools::Stopwatch_Check_Endpoint(int checkpoint_index) {
 	return true;
 }
 
-float cpp_tools::Stopwatch_GetTime_s(int checkpoint_index)
+float cpp_tools::Stopwatch_GetTime(int checkpoint_index, int time_unit)
 {
-	if (checkpoint_index < this->Stopwatch_Length()) {
+	if (checkpoint_index >= this->Stopwatch_Length()) {
+		return -1;
+	}
+
+
+	if (time_unit == this->enum_TimeUnit_sec) {
 		return ((float)(Tick_Array_End[checkpoint_index] - Tick_Array_Start[checkpoint_index]) / this->TicksPerSec);
 	}
-	else {
-		return -1;
+	else if (time_unit == this->enum_TimeUnit_millisec){
+		return ((float)(Tick_Array_End[checkpoint_index] - Tick_Array_Start[checkpoint_index]) / this->TicksPerSec) * 1000;
+		
 	}
 	
 }
 
-float cpp_tools::Stopwatch_GetTime_ms(int checkpoint_index)
+float cpp_tools::Stopwatch_GetAverageTime(int time_unit)
 {
-	if (checkpoint_index < this->Stopwatch_Length()) {
-		return ((float)(Tick_Array_End[checkpoint_index] - Tick_Array_Start[checkpoint_index]) / this->TicksPerSec) * 1000;
-	}
-	else {
-		return -1;
-	}
+	return 0.0f;
 }
 
 //=====================================================================================================

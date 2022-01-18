@@ -20,12 +20,11 @@ int main() { //기능 테스트용 메인
 	cp.Stopwatch_Check_Endpoint(3);
 
 	cp.Stopwatch_Check_Startpoint();
-	cp.Log_Add(to_string(cp.Stopwatch_GetTime_ms(0)));
-	cp.Log_Add(to_string(cp.Stopwatch_GetTime_ms(1)));
+	cp.Log_Add_Stopwatch(0, cp.enum_TimeUnit_millisec);
+	cp.Log_Add_Stopwatch(1);
 	cp.Stopwatch_Check_Endpoint();
-	cp.Log_Add(to_string(cp.Stopwatch_GetTime_ms(2)));
-	cp.Log_Add(to_string(cp.Stopwatch_GetTime_ms(3)));
-
+	cp.Log_Add_Stopwatch(2);
+	cp.Log_Add_Stopwatch(3);
 
 
 	cp.Log_Endline();
