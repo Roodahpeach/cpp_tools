@@ -248,7 +248,14 @@ float cpp_tools::Stopwatch_GetTime(int checkpoint_index, int time_unit)
 
 float cpp_tools::Stopwatch_GetAverageTime(int time_unit)
 {
-	return 0.0f;
+	int time_offset = enum_TimeUnit_millisec == 1 ? 1000 : 1;
+	vector<float> sum;
+
+	for (int i = 0; i < Tick_Array_End.size(); i++) {
+		sum.push_back(((float)(Tick_Array_End[i] - Tick_Array_Start[i]) / this->TicksPerSec) * time_offset);
+	}
+	
+	return accumulate(sum.begin(), sum.end(), 0.0f) / sum.size();;
 }
 
 //=====================================================================================================

@@ -7,6 +7,8 @@
 #include <time.h>
 
 #include <vector>
+#include <algorithm>
+#include <numeric>
 
 
 using namespace std;
