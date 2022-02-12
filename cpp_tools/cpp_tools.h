@@ -26,6 +26,8 @@ private:
 	vector<__int64> Tick_Array_End;
 	__int64 TicksPerSec;
 
+	__int64 Program_Init_Time;
+
 	//=====================================================================================================
 
 	//로그 함수 
@@ -37,6 +39,7 @@ private:
 	bool Stopwatch_End();
 	bool Stopwatch_GetQPF(__int64* QPFTicksPerSec);
 	__int64 Stopwatch_GetQPCTick(void);
+	float Stopwatch_GetProgramElapseTime(int time_unit);
 public:
 
 	typedef enum {
@@ -52,6 +55,7 @@ public:
 
 	//로그 함수 
 	bool Log_Add(string str);
+	bool Log_Add_Quick(string str, int time_unit = enum_TimeUnit_sec);
 	bool Log_Add_Stopwatch(int index, int time_unit = enum_TimeUnit_millisec);
 	bool Log_Endline();
 		

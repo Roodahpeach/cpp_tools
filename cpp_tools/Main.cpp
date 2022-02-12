@@ -2,33 +2,40 @@
 
 using namespace std;
 
-int main() { //기능 테스트용 메인
+/// <summary>
+/// Log_Add_Quick 사용법에 대한 예제
+/// </summary>
+void Example_Log_Add_Quick() { 
 	cpp_tools cp;
+	cp.Init_cpptools("Example_Log_Add_Quick Log"); //cpptools 시작
 
-	cp.Stopwatch_Check_Startpoint();
-	cp.Init_cpptools();
-	cp.Stopwatch_Check_Startpoint(3);
-	cp.Log_Add("Yeah");
-	cp.Log_Add(to_string(123));
-	cp.Log_Add("df");
+	cp.Log_Add_Quick("로깅 시작됨.", cp.enum_TimeUnit_sec);
+	cout << "apfhadpfahd";
+	cp.Log_Add_Quick("Cout 수행", cp.enum_TimeUnit_sec);
+	int x = 10 + 10;
+	cp.Log_Add_Quick("쓸데없는 연산 수행", cp.enum_TimeUnit_sec);
+	cp.Log_Add_Quick("로깅 종료함", cp.enum_TimeUnit_sec);
+	cp.End_cpptools();//cpptools 끝
+}
+
+void Example_Stopwatch1() {
+	cpp_tools cp;
+	cp.Init_cpptools("Example_Stopwatch1 Log"); //cpptools 시작
+
+	const int Function_TimeCheck_Index = 0;
+
+	cp.Stopwatch_Check_Startpoint(Function_TimeCheck_Index);
+	Sleep(100);
+	cp.Stopwatch_Check_Endpoint(Function_TimeCheck_Index);
+
+	cp.Log_Add("Sleep(100)의 수행시간 체크 - ");
+	cp.Log_Add_Stopwatch(Function_TimeCheck_Index, cp.enum_TimeUnit_millisec);
 	cp.Log_Endline();
-	cp.Log_Add("Yeah12");
-	cp.Log_Add(to_string(444));
-	cp.Log_Add("ef");
-	cp.Log_Endline();
-	cp.Stopwatch_Check_Endpoint();
-	cp.Stopwatch_Check_Endpoint(3);
 
-	cp.Stopwatch_Check_Startpoint();
-	cp.Log_Add_Stopwatch(0, cp.enum_TimeUnit_millisec);
-	cp.Log_Add_Stopwatch(1);
-	cp.Stopwatch_Check_Endpoint();
-	cp.Log_Add_Stopwatch(2);
-	cp.Log_Add_Stopwatch(3);
-
-
-	cp.Log_Endline();
 	cp.End_cpptools();
+}
 
+int main() {
+	Example_Stopwatch1();
 	return 0;
 }

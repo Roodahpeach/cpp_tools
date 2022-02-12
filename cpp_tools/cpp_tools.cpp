@@ -7,6 +7,8 @@ bool cpp_tools::Init_cpptools(string log_file_name)
 	TicksPerSec = 0;
 	this->Log_Start(log_file_name);
 	this->Stopwatch_Start();
+
+	this->Program_Init_Time = cpp_tools::Stopwatch_GetQPCTick();
 	return true;
 }
 
@@ -35,6 +37,14 @@ bool cpp_tools::Log_Add(string str)
 		return true;
 	}
 	return false;
+}
+
+bool cpp_tools::Log_Add_Quick(string str, int time_unit)
+{
+	Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));
+	this->Log_Add(str);
+	this->Log_Endline();
+	return true;
 }
 
 bool cpp_tools::Log_Add_Stopwatch(int index, int time_unit)
@@ -173,6 +183,19 @@ __int64 cpp_tools::Stopwatch_GetQPCTick(void)
 	return static_cast<__int64>(li.QuadPart);
 }
 
+float cpp_tools::Stopwatch_GetProgramElapseTime(int time_unit)
+{
+
+	if (time_unit == this->enum_TimeUnit_sec) {
+		return ((float)(Stopwatch_GetQPCTick() - this->Program_Init_Time) / this->TicksPerSec);
+	}
+	else if (time_unit == this->enum_TimeUnit_millisec) {
+		return ((float)(Stopwatch_GetQPCTick() - this->Program_Init_Time) / this->TicksPerSec) * 1000;
+
+	}
+	return 0.0f;
+}
+
 bool cpp_tools::Stopwatch_Start()
 {
 	return this->Stopwatch_GetQPF(&this->TicksPerSec);
@@ -244,6 +267,7 @@ float cpp_tools::Stopwatch_GetTime(int checkpoint_index, int time_unit)
 		
 	}
 	
+	return 0.0f;
 }
 
 float cpp_tools::Stopwatch_GetAverageTime(int time_unit)
