@@ -39,6 +39,12 @@ bool cpp_tools::Log_Add(string str)
 	return false;
 }
 
+bool cpp_tools::Log_Add_ElapseTime(int time_unit) {
+	Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));
+	
+	return true;
+}
+
 bool cpp_tools::Log_Add_Quick(string str, int time_unit)
 {
 	Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));

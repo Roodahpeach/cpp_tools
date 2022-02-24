@@ -55,9 +55,11 @@ public:
 
 	//로그 함수 
 	bool Log_Add(string str);
+	bool Log_Add_ElapseTime(int time_unit = enum_TimeUnit_sec);
 	bool Log_Add_Quick(string str, int time_unit = enum_TimeUnit_sec);
 	bool Log_Add_Stopwatch(int index, int time_unit = enum_TimeUnit_millisec);
 	bool Log_Endline();
+	
 		
 	//timer 기능
 	bool Stopwatch_Check_Startpoint();
