@@ -1,7 +1,6 @@
 #include "cpp_tools.h"
 
-//=====================================================================================================
-
+#pragma region 통합 함수
 bool cpp_tools::Init_cpptools(string log_file_name)
 {
 	TicksPerSec = 0;
@@ -18,9 +17,9 @@ bool cpp_tools::End_cpptools()
 	this->Stopwatch_End();
 	return true;
 }
+#pragma endregion
 
-//=====================================================================================================
-
+#pragma region 로그 기능
 bool cpp_tools::Log_Start(string log_file_name)
 {
 	cpp_tools::log_file_name = log_file_name + "_" + cpp_tools::Date_GetDateNTime_ForFileName() + ".csv";
@@ -40,24 +39,33 @@ bool cpp_tools::Log_Add(string str)
 }
 
 bool cpp_tools::Log_Add_ElapseTime(int time_unit) {
-	Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));
-	
-	return true;
+	if (cpp_tools::logfile_ofstream.good()) {
+		Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));
+
+		return true;
+	}
+	return false;
 }
 
 bool cpp_tools::Log_Add_Quick(string str, int time_unit)
 {
-	Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));
-	this->Log_Add(str);
-	this->Log_Endline();
-	return true;
+	if (cpp_tools::logfile_ofstream.good()) {
+		Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));
+		this->Log_Add(str);
+		this->Log_Endline();
+		return true;
+	}
+	return false;
 }
 
 bool cpp_tools::Log_Add_Stopwatch(int index, int time_unit)
 {
-	Log_Add(to_string(this->Stopwatch_GetTime(index, time_unit)));
+	if (cpp_tools::logfile_ofstream.good()) {
+		Log_Add(to_string(this->Stopwatch_GetTime(index, time_unit)));
 
-	return true;
+		return true;
+	}
+	return false;
 }
 
 bool cpp_tools::Log_Endline()
@@ -79,9 +87,9 @@ bool cpp_tools::Log_End()
 	}
 	return false;
 }
+#pragma endregion
 
-//=====================================================================================================
-
+#pragma region 날짜, 시간기능
 string cpp_tools::Date_GetDateNTime()
 {
 	struct tm curr_tm;
@@ -163,9 +171,9 @@ string cpp_tools::Date_GetTime()
 	return out_str;
 }
 
-//=====================================================================================================
+#pragma endregion
 
-
+#pragma region 타이머 기능
 bool cpp_tools::Stopwatch_GetQPF(__int64* QPFTicksPerSec)
 {
 	LARGE_INTEGER li;
@@ -237,7 +245,7 @@ bool cpp_tools::Stopwatch_Check_Startpoint()
 bool cpp_tools::Stopwatch_Check_Startpoint(int checkpoint_index)
 {
 	if (checkpoint_index >= this->Stopwatch_Length()) {
-		this->Tick_Array_Start.resize(checkpoint_index+1);
+		this->Tick_Array_Start.resize(checkpoint_index + 1);
 	}
 	this->Tick_Array_Start[checkpoint_index] = cpp_tools::Stopwatch_GetQPCTick();
 
@@ -268,11 +276,11 @@ float cpp_tools::Stopwatch_GetTime(int checkpoint_index, int time_unit)
 	if (time_unit == this->enum_TimeUnit_sec) {
 		return ((float)(Tick_Array_End[checkpoint_index] - Tick_Array_Start[checkpoint_index]) / this->TicksPerSec);
 	}
-	else if (time_unit == this->enum_TimeUnit_millisec){
+	else if (time_unit == this->enum_TimeUnit_millisec) {
 		return ((float)(Tick_Array_End[checkpoint_index] - Tick_Array_Start[checkpoint_index]) / this->TicksPerSec) * 1000;
-		
+
 	}
-	
+
 	return 0.0f;
 }
 
@@ -284,9 +292,9 @@ float cpp_tools::Stopwatch_GetAverageTime(int time_unit)
 	for (int i = 0; i < Tick_Array_End.size(); i++) {
 		sum.push_back(((float)(Tick_Array_End[i] - Tick_Array_Start[i]) / this->TicksPerSec) * time_offset);
 	}
-	
+
 	return accumulate(sum.begin(), sum.end(), 0.0f) / sum.size();;
 }
 
-//=====================================================================================================
+#pragma endregion
 

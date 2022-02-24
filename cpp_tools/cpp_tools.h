@@ -15,7 +15,7 @@ using namespace std;
 
 class cpp_tools {
 private:
-	
+#pragma region Private_Variable
 	//로그 기능 
 	string log_file_name;
 	string log_string;
@@ -27,9 +27,9 @@ private:
 	__int64 TicksPerSec;
 
 	__int64 Program_Init_Time;
+#pragma endregion
 
-	//=====================================================================================================
-
+#pragma region Private_Functions
 	//로그 함수 
 	bool Log_Start(string log_file_name = "Log");
 	bool Log_End();
@@ -40,15 +40,18 @@ private:
 	bool Stopwatch_GetQPF(__int64* QPFTicksPerSec);
 	__int64 Stopwatch_GetQPCTick(void);
 	float Stopwatch_GetProgramElapseTime(int time_unit);
-public:
+#pragma endregion
 
+	
+public:
+#pragma region Public_Variable
 	typedef enum {
 		enum_TimeUnit_sec,
 		enum_TimeUnit_millisec
 	}enum_TimeUnit;
+#pragma endregion
 
-	//=====================================================================================================
-
+#pragma region Public_Functions
 	//통합 함수
 	bool Init_cpptools(string log_file_name = "Log");
 	bool End_cpptools();
@@ -59,8 +62,8 @@ public:
 	bool Log_Add_Quick(string str, int time_unit = enum_TimeUnit_sec);
 	bool Log_Add_Stopwatch(int index, int time_unit = enum_TimeUnit_millisec);
 	bool Log_Endline();
-	
-		
+
+
 	//timer 기능
 	bool Stopwatch_Check_Startpoint();
 	bool Stopwatch_Check_Startpoint(int checkpoint_index);
@@ -75,4 +78,7 @@ public:
 	string Date_GetDateNTime();
 	string Date_GetDateNTime_ForFileName();
 	string Date_GetTime();
+#pragma endregion
+
+	
 };
