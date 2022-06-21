@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <numeric>
 
+#include <mutex> 
 
 using namespace std;
 
@@ -27,6 +28,9 @@ private:
 	__int64 TicksPerSec;
 
 	__int64 Program_Init_Time;
+	
+	mutex mutex_log;
+	
 #pragma endregion
 
 #pragma region Private_Functions

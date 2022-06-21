@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "cpp_tools.h"
+
 
 #pragma region ÅëÇÕ ÇÔ¼ö
 bool cpp_tools::Init_cpptools(string log_file_name)
@@ -50,9 +52,11 @@ bool cpp_tools::Log_Add_ElapseTime(int time_unit) {
 bool cpp_tools::Log_Add_Quick(string str, int time_unit)
 {
 	if (cpp_tools::logfile_ofstream.good()) {
+		mutex_log.lock();
 		Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));
 		this->Log_Add(str);
 		this->Log_Endline();
+		mutex_log.unlock();
 		return true;
 	}
 	return false;
@@ -71,10 +75,12 @@ bool cpp_tools::Log_Add_Stopwatch(int index, int time_unit)
 bool cpp_tools::Log_Endline()
 {
 	if (cpp_tools::logfile_ofstream.good()) {
-		this->log_string.pop_back(); // ½°Ç¥ ¶¼±â
-		cpp_tools::logfile_ofstream << this->log_string << endl;
-		this->log_string.clear();
-		return true;
+		if (!this->log_string.empty()) {
+			this->log_string.pop_back(); // ½°Ç¥ ¶¼±â
+			cpp_tools::logfile_ofstream << this->log_string << endl;
+			this->log_string.clear();
+			return true;
+		}
 	}
 	return false;
 }
