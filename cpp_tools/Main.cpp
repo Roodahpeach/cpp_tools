@@ -35,6 +35,13 @@ void Example_Stopwatch1() {
 	cp.End_cpptools();
 }
 
+void Example_INI_File() {
+	cpp_tools cp;
+	cp.Init_cpptools();
+
+	cp.End_cpptools();
+}
+
 int main() {
 	Example_Stopwatch1();
 	return 0;

@@ -11,36 +11,9 @@
 #include <numeric>
 
 #include <mutex> 
+#include <wchar.h>
 
 using namespace std;
-
-CString INIReadString(CString strAppName, CString strKeyName, CString strFilePath)
-{
-	char szReturnString[1024] = { 0, };
-	memset(szReturnString, NULL, 1024);
-	GetPrivateProfileString(strAppName, strKeyName, "", szReturnString, 1024, strFilePath);
-	CString str;
-	str.Format("%s", szReturnString);
-	return str;
-}
-
-void INIWriteString(CString strAppName, CString strKeyName, CString strValue, CString strFilePath)
-{
-	WritePrivateProfileString(strAppName, strKeyName, strValue, strFilePath);
-}
-
-CString GetExePath()
-{
-	g_criticalExe.Lock();
-	static TCHAR pBuf[256] = { 0, };
-	memset(pBuf, NULL, sizeof(pBuf));
-	GetModuleFileName(NULL, pBuf, sizeof(pBuf)); //현재 실행 경로를 가져오는 함수
-	CString strFilePath;
-	strFilePath.Format(_T("%s"), pBuf);
-	strFilePath = strFilePath.Left(strFilePath.ReverseFind(_T('\\')));
-	g_criticalExe.Unlock();
-	return strFilePath;
-}
 
 class cpp_tools {
 private:
@@ -49,15 +22,19 @@ private:
 	string log_file_name;
 	string log_string;
 	ofstream logfile_ofstream;
+	mutex mutex_log;
 
 	//timer 기능
 	vector<__int64> Tick_Array_Start;
 	vector<__int64> Tick_Array_End;
 	__int64 TicksPerSec;
-
 	__int64 Program_Init_Time;
 	
-	mutex mutex_log;
+	//INI 기능
+	mutex mutex_INI;
+	wstring FileLocation;
+	wstring IniFileName;
+	const wchar_t *INI_No_Result = L"";
 	
 #pragma endregion
 
@@ -72,6 +49,9 @@ private:
 	bool Stopwatch_GetQPF(__int64* QPFTicksPerSec);
 	__int64 Stopwatch_GetQPCTick(void);
 	float Stopwatch_GetProgramElapseTime(int time_unit);
+
+	//INI 기능
+	wstring GetExePath();
 #pragma endregion
 
 	
@@ -85,7 +65,7 @@ public:
 
 #pragma region Public_Functions
 	//통합 함수
-	bool Init_cpptools(string log_file_name = "Log");
+	bool Init_cpptools(string log_file_name = "Log", wstring Ini_File_Name = L"Setting");
 	bool End_cpptools();
 
 	//로그 함수 
@@ -110,7 +90,11 @@ public:
 	string Date_GetDateNTime();
 	string Date_GetDateNTime_ForFileName();
 	string Date_GetTime();
-#pragma endregion
 
-	
+	//INI 기능
+	wstring INIReadString(wstring strAppName, wstring strKeyName);
+	wstring INIReadString(wstring strAppName, wstring strKeyName, wstring strFilePath);
+	void INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue);
+	void INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue, wstring strFilePath);
+#pragma endregion
 };

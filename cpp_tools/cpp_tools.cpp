@@ -1,13 +1,15 @@
 #include "cpp_tools.h"
 
 #pragma region 통합 함수
-bool cpp_tools::Init_cpptools(string log_file_name)
+bool cpp_tools::Init_cpptools(string log_file_name, wstring Ini_File_Name)
 {
 	TicksPerSec = 0;
 	this->Log_Start(log_file_name);
 	this->Stopwatch_Start();
 
 	this->Program_Init_Time = cpp_tools::Stopwatch_GetQPCTick();
+	this->FileLocation = GetExePath();
+	this->IniFileName = Ini_File_Name;
 	return true;
 }
 
@@ -302,3 +304,40 @@ float cpp_tools::Stopwatch_GetAverageTime(int time_unit)
 
 #pragma endregion
 
+#pragma region INI 기능
+
+wstring cpp_tools::GetExePath()
+{
+	static TCHAR pBuf[256] = { 0, };
+	memset(pBuf, NULL, sizeof(pBuf));
+	GetModuleFileName(NULL, pBuf, sizeof(pBuf)); //현재 실행 경로를 가져오는 함수
+	wstring strFilePath(pBuf);
+	return strFilePath;
+}
+
+wstring cpp_tools::INIReadString(wstring strAppName, wstring strKeyName)
+{
+	return INIReadString(strAppName, strKeyName,this->FileLocation);
+}
+
+wstring cpp_tools::INIReadString(wstring strAppName, wstring strKeyName, wstring strFilePath)
+{
+	wchar_t szReturnString[1024] = { 0, };
+	memset(szReturnString, NULL, 1024*2);
+	GetPrivateProfileString(strAppName.c_str(), strKeyName.c_str(), INI_No_Result, szReturnString, 1024, strFilePath.c_str());
+	wstring str(szReturnString);
+	return str;
+
+	return wstring();
+}
+
+void cpp_tools::INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue)
+{
+	INIWriteString(strAppName, strKeyName, strValue, this->FileLocation);
+}
+
+void cpp_tools::INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue, wstring strFilePath)
+{
+	WritePrivateProfileString(strAppName.c_str(), strKeyName.c_str(), strValue.c_str(), strFilePath.c_str());
+}
+#pragma endregion
