@@ -8,8 +8,9 @@ bool cpp_tools::Init_cpptools(string log_file_name, wstring Ini_File_Name)
 	this->Stopwatch_Start();
 
 	this->Program_Init_Time = cpp_tools::Stopwatch_GetQPCTick();
-	this->FileLocation = GetExePath();
-	this->IniFileName = Ini_File_Name;
+	this->INI_FileLocation = GetExePath();
+	this->INI_FileName = Ini_File_Name+L".ini";
+	this->INI_FileFullLocation = INI_FileLocation + L"\\" + INI_FileName;
 	return true;
 }
 
@@ -52,11 +53,11 @@ bool cpp_tools::Log_Add_ElapseTime(int time_unit) {
 bool cpp_tools::Log_Add_Quick(string str, int time_unit)
 {
 	if (cpp_tools::logfile_ofstream.good()) {
-		mutex_log.lock();
+		log_mutex.lock();
 		Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));
 		this->Log_Add(str);
 		this->Log_Endline();
-		mutex_log.unlock();
+		log_mutex.unlock();
 		return true;
 	}
 	return false;
@@ -312,12 +313,13 @@ wstring cpp_tools::GetExePath()
 	memset(pBuf, NULL, sizeof(pBuf));
 	GetModuleFileName(NULL, pBuf, sizeof(pBuf)); //현재 실행 경로를 가져오는 함수
 	wstring strFilePath(pBuf);
+	strFilePath = strFilePath.substr(0,strFilePath.rfind(L"\\")); //마지막 EXE부분 떼어내기
 	return strFilePath;
 }
 
 wstring cpp_tools::INIReadString(wstring strAppName, wstring strKeyName)
 {
-	return INIReadString(strAppName, strKeyName,this->FileLocation);
+	return INIReadString(strAppName, strKeyName,this->INI_FileFullLocation);
 }
 
 wstring cpp_tools::INIReadString(wstring strAppName, wstring strKeyName, wstring strFilePath)
@@ -333,7 +335,7 @@ wstring cpp_tools::INIReadString(wstring strAppName, wstring strKeyName, wstring
 
 void cpp_tools::INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue)
 {
-	INIWriteString(strAppName, strKeyName, strValue, this->FileLocation);
+	INIWriteString(strAppName, strKeyName, strValue, this->INI_FileFullLocation);
 }
 
 void cpp_tools::INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue, wstring strFilePath)

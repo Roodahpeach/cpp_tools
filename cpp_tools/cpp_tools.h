@@ -22,7 +22,7 @@ private:
 	string log_file_name;
 	string log_string;
 	ofstream logfile_ofstream;
-	mutex mutex_log;
+	mutex log_mutex;
 
 	//timer 기능
 	vector<__int64> Tick_Array_Start;
@@ -31,10 +31,10 @@ private:
 	__int64 Program_Init_Time;
 	
 	//INI 기능
-	mutex mutex_INI;
-	wstring FileLocation;
-	wstring IniFileName;
-	const wchar_t *INI_No_Result = L"";
+	mutex INI_mutex;
+	wstring INI_FileLocation;
+	wstring INI_FileName;
+	wstring INI_FileFullLocation;
 	
 #pragma endregion
 
@@ -61,6 +61,9 @@ public:
 		enum_TimeUnit_sec,
 		enum_TimeUnit_millisec
 	}enum_TimeUnit;
+
+	//INI 기능
+	const wchar_t* INI_No_Result = L"No Result";
 #pragma endregion
 
 #pragma region Public_Functions
