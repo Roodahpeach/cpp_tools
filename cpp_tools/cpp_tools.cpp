@@ -1,13 +1,16 @@
 #include "cpp_tools.h"
 
 #pragma region 통합 함수
-bool cpp_tools::Init_cpptools(string log_file_name)
+bool cpp_tools::Init_cpptools(string log_file_name, wstring Ini_File_Name)
 {
 	TicksPerSec = 0;
 	this->Log_Start(log_file_name);
 	this->Stopwatch_Start();
 
 	this->Program_Init_Time = cpp_tools::Stopwatch_GetQPCTick();
+	this->INI_FileLocation = GetExePath();
+	this->INI_FileName = Ini_File_Name+L".ini";
+	this->INI_FileFullLocation = INI_FileLocation + L"\\" + INI_FileName;
 	return true;
 }
 
@@ -50,11 +53,11 @@ bool cpp_tools::Log_Add_ElapseTime(int time_unit) {
 bool cpp_tools::Log_Add_Quick(string str, int time_unit)
 {
 	if (cpp_tools::logfile_ofstream.good()) {
-		mutex_log.lock();
+		log_mutex.lock();
 		Log_Add(to_string(this->Stopwatch_GetProgramElapseTime(time_unit)));
 		this->Log_Add(str);
 		this->Log_Endline();
-		mutex_log.unlock();
+		log_mutex.unlock();
 		return true;
 	}
 	return false;
@@ -302,3 +305,41 @@ float cpp_tools::Stopwatch_GetAverageTime(int time_unit)
 
 #pragma endregion
 
+#pragma region INI 기능
+
+wstring cpp_tools::GetExePath()
+{
+	static TCHAR pBuf[256] = { 0, };
+	memset(pBuf, NULL, sizeof(pBuf));
+	GetModuleFileName(NULL, pBuf, sizeof(pBuf)); //현재 실행 경로를 가져오는 함수
+	wstring strFilePath(pBuf);
+	strFilePath = strFilePath.substr(0,strFilePath.rfind(L"\\")); //마지막 EXE부분 떼어내기
+	return strFilePath;
+}
+
+wstring cpp_tools::INIReadString(wstring strAppName, wstring strKeyName)
+{
+	return INIReadString(strAppName, strKeyName,this->INI_FileFullLocation);
+}
+
+wstring cpp_tools::INIReadString(wstring strAppName, wstring strKeyName, wstring strFilePath)
+{
+	wchar_t szReturnString[1024] = { 0, };
+	memset(szReturnString, NULL, 1024*2);
+	GetPrivateProfileString(strAppName.c_str(), strKeyName.c_str(), INI_No_Result, szReturnString, 1024, strFilePath.c_str());
+	wstring str(szReturnString);
+	return str;
+
+	return wstring();
+}
+
+void cpp_tools::INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue)
+{
+	INIWriteString(strAppName, strKeyName, strValue, this->INI_FileFullLocation);
+}
+
+void cpp_tools::INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue, wstring strFilePath)
+{
+	WritePrivateProfileString(strAppName.c_str(), strKeyName.c_str(), strValue.c_str(), strFilePath.c_str());
+}
+#pragma endregion

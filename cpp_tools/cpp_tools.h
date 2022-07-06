@@ -11,6 +11,7 @@
 #include <numeric>
 
 #include <mutex> 
+#include <wchar.h>
 
 using namespace std;
 
@@ -21,15 +22,19 @@ private:
 	string log_file_name;
 	string log_string;
 	ofstream logfile_ofstream;
+	mutex log_mutex;
 
 	//timer 기능
 	vector<__int64> Tick_Array_Start;
 	vector<__int64> Tick_Array_End;
 	__int64 TicksPerSec;
-
 	__int64 Program_Init_Time;
 	
-	mutex mutex_log;
+	//INI 기능
+	mutex INI_mutex;
+	wstring INI_FileLocation;
+	wstring INI_FileName;
+	wstring INI_FileFullLocation;
 	
 #pragma endregion
 
@@ -44,6 +49,9 @@ private:
 	bool Stopwatch_GetQPF(__int64* QPFTicksPerSec);
 	__int64 Stopwatch_GetQPCTick(void);
 	float Stopwatch_GetProgramElapseTime(int time_unit);
+
+	//INI 기능
+	wstring GetExePath();
 #pragma endregion
 
 	
@@ -53,11 +61,14 @@ public:
 		enum_TimeUnit_sec,
 		enum_TimeUnit_millisec
 	}enum_TimeUnit;
+
+	//INI 기능
+	const wchar_t* INI_No_Result = L"No Result";
 #pragma endregion
 
 #pragma region Public_Functions
 	//통합 함수
-	bool Init_cpptools(string log_file_name = "Log");
+	bool Init_cpptools(string log_file_name = "Log", wstring Ini_File_Name = L"Setting");
 	bool End_cpptools();
 
 	//로그 함수 
@@ -82,7 +93,11 @@ public:
 	string Date_GetDateNTime();
 	string Date_GetDateNTime_ForFileName();
 	string Date_GetTime();
-#pragma endregion
 
-	
+	//INI 기능
+	wstring INIReadString(wstring strAppName, wstring strKeyName);
+	wstring INIReadString(wstring strAppName, wstring strKeyName, wstring strFilePath);
+	void INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue);
+	void INIWriteString(wstring strAppName, wstring strKeyName, wstring strValue, wstring strFilePath);
+#pragma endregion
 };

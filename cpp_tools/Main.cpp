@@ -35,7 +35,18 @@ void Example_Stopwatch1() {
 	cp.End_cpptools();
 }
 
+void Example_INI_File() {
+	cpp_tools cp;
+	cp.Init_cpptools();
+
+	cp.INIWriteString(L"Test Settings", L"Testvalue", L"1");
+
+	wstring temp = cp.INIReadString(L"Test Settings", L"Testvalue");
+	wcout << temp;
+	cp.End_cpptools();
+}
+
 int main() {
-	Example_Stopwatch1();
+	Example_INI_File();
 	return 0;
 }
