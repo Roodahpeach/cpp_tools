@@ -1,5 +1,6 @@
 #include "cpp_tools.h"
 
+
 #pragma region 통합 함수
 bool cpp_tools::Init_cpptools(string log_file_name, wstring Ini_File_Name)
 {

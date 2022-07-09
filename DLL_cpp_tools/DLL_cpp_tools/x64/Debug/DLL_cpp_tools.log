@@ -1,0 +1,13 @@
+﻿  DLL_cpp_tools.cpp
+C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\DLL_cpp_tools\DLL_cpp_tools.cpp(4,8): warning C4273: 'Sum': dll 연결이 일치하지 않습니다.
+C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\DLL_cpp_tools\DLL_cpp_tools.h(10,38): message : 'Sum'의 이전 정의를 참조하십시오.
+C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\DLL_cpp_tools\DLL_cpp_tools.cpp(8,8): warning C4273: 'Sub': dll 연결이 일치하지 않습니다.
+C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\DLL_cpp_tools\DLL_cpp_tools.h(11,38): message : 'Sub'의 이전 정의를 참조하십시오.
+C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\DLL_cpp_tools\DLL_cpp_tools.cpp(12,8): warning C4273: 'Mul': dll 연결이 일치하지 않습니다.
+C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\DLL_cpp_tools\DLL_cpp_tools.h(12,38): message : 'Mul'의 이전 정의를 참조하십시오.
+C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\DLL_cpp_tools\DLL_cpp_tools.cpp(16,8): warning C4273: 'Div': dll 연결이 일치하지 않습니다.
+C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\DLL_cpp_tools\DLL_cpp_tools.h(13,38): message : 'Div'의 이전 정의를 참조하십시오.
+  dllmain.cpp
+  코드를 생성하고 있습니다...
+     C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\x64\Debug\DLL_cpp_tools.lib 라이브러리 및 C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\x64\Debug\DLL_cpp_tools.exp 개체를 생성하고 있습니다.
+  DLL_cpp_tools.vcxproj -> C:\Users\rooda\Desktop\KKM 개발\cpp_tools\DLL_cpp_tools\x64\Debug\DLL_cpp_tools.dll
