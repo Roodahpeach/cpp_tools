@@ -2,7 +2,7 @@
 
 
 #ifdef CREATEDLL_EXPORTS
-#define MYMATH_DECLSPEC __declspec(dllexport)
+#define CPP_TOOLS_DECLSPEC __declspec(dllexport)
 #else
 #define CPP_TOOLS_DECLSPEC __declspec(dllimport)
 #endif
