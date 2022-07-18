@@ -46,7 +46,19 @@ void Example_INI_File() {
 	cp.End_cpptools();
 }
 
+void Example_FuncLog() {
+	cpp_tools cp;
+
+	cp.Init_cpptools();
+
+	cp.FuncLog_Init();
+	cp.FuncLog_Add(__FUNCTION__, __FILE__, __LINE__, cp.enum_LogLevel_INFO, "시발");
+	cp.FuncLog_Add(__FUNCTION__, __FILE__, __LINE__, cp.enum_LogLevel_INFO, "시발");
+
+}
+
 int main() {
-	Example_INI_File();
+	Example_FuncLog();
+
 	return 0;
 }

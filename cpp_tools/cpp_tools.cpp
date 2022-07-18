@@ -6,10 +6,11 @@ bool cpp_tools::Init_cpptools(string log_file_name, wstring Ini_File_Name)
 	TicksPerSec = 0;
 	this->Log_Start(log_file_name);
 	this->Stopwatch_Start();
+	FuncLog_SetLogLevel();
 
 	this->Program_Init_Time = cpp_tools::Stopwatch_GetQPCTick();
 	this->INI_FileLocation = GetExePath();
-	this->INI_FileName = Ini_File_Name+L".ini";
+	this->INI_FileName = Ini_File_Name + L".ini";
 	this->INI_FileFullLocation = INI_FileLocation + L"\\" + INI_FileName;
 	return true;
 }
@@ -92,6 +93,62 @@ bool cpp_tools::Log_End()
 		cpp_tools::logfile_ofstream.close();
 		return true;
 	}
+	return false;
+}
+
+string cpp_tools::FuncLog_GetLogLevelString(int LogLevel)
+{
+	string str_returnvalue;
+
+	switch (LogLevel)
+	{
+	case enum_LogLevel_DEBUG:		str_returnvalue = "DEBUG"; break;
+	case enum_LogLevel_ERROR:		str_returnvalue = "ERROR"; break;
+	case enum_LogLevel_FATAL:		str_returnvalue = "FATAL"; break;
+	case enum_LogLevel_INFO:		str_returnvalue = "INFO"; break;
+	case enum_LogLevel_WARNING:		str_returnvalue = "WARNING"; break;
+	default:						str_returnvalue = to_string(LogLevel); break;
+	}
+
+	return str_returnvalue;
+}
+
+bool cpp_tools::FuncLog_Init()
+{
+	log_mutex.lock();
+	Log_Add("수행 시간(s)");
+	Log_Add("함수 이름");
+	Log_Add("로그 레벨");
+	Log_Add("메시지");
+	Log_Add("파일명");
+	Log_Add("위치");
+	Log_Endline();
+	log_mutex.unlock();
+	return false;
+}
+
+bool cpp_tools::FuncLog_Add(const char * __func, const char* __filename, int __line, int LogLevel, string msg)
+{
+	string str_FuncName = string(__func);
+	string str_FileName = string(__filename);
+	string str_LineNum = to_string(__line);
+
+	if (LogLevel <= this->log_loglevel) {
+		log_mutex.lock();
+		Log_Add_ElapseTime(enum_TimeUnit_sec);
+		Log_Add(str_FuncName);
+		Log_Add(FuncLog_GetLogLevelString(LogLevel));
+		Log_Add(msg);
+		Log_Add(str_FileName);
+		Log_Add(str_LineNum);
+		Log_Endline();
+		log_mutex.unlock();
+	}
+	return false;
+}
+bool cpp_tools::FuncLog_SetLogLevel(int LogLevel)
+{
+	this->log_loglevel = LogLevel;
 	return false;
 }
 #pragma endregion
@@ -313,19 +370,19 @@ wstring cpp_tools::GetExePath()
 	memset(pBuf, NULL, sizeof(pBuf));
 	GetModuleFileName(NULL, pBuf, sizeof(pBuf)); //현재 실행 경로를 가져오는 함수
 	wstring strFilePath(pBuf);
-	strFilePath = strFilePath.substr(0,strFilePath.rfind(L"\\")); //마지막 EXE부분 떼어내기
+	strFilePath = strFilePath.substr(0, strFilePath.rfind(L"\\")); //마지막 EXE부분 떼어내기
 	return strFilePath;
 }
 
 wstring cpp_tools::INIReadString(wstring strAppName, wstring strKeyName)
 {
-	return INIReadString(strAppName, strKeyName,this->INI_FileFullLocation);
+	return INIReadString(strAppName, strKeyName, this->INI_FileFullLocation);
 }
 
 wstring cpp_tools::INIReadString(wstring strAppName, wstring strKeyName, wstring strFilePath)
 {
 	wchar_t szReturnString[1024] = { 0, };
-	memset(szReturnString, NULL, 1024*2);
+	memset(szReturnString, NULL, 1024 * 2);
 	GetPrivateProfileString(strAppName.c_str(), strKeyName.c_str(), INI_No_Result, szReturnString, 1024, strFilePath.c_str());
 	wstring str(szReturnString);
 	return str;

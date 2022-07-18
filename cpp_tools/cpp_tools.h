@@ -23,6 +23,7 @@ private:
 	string log_string;
 	ofstream logfile_ofstream;
 	mutex log_mutex;
+	int log_loglevel;
 
 	//timer 기능
 	vector<__int64> Tick_Array_Start;
@@ -42,6 +43,7 @@ private:
 	//로그 함수 
 	bool Log_Start(string log_file_name = "Log");
 	bool Log_End();
+	string FuncLog_GetLogLevelString(int LogLevel);
 
 	//timer 기능
 	bool Stopwatch_Start();
@@ -62,6 +64,14 @@ public:
 		enum_TimeUnit_millisec
 	}enum_TimeUnit;
 
+	typedef enum {
+		enum_LogLevel_FATAL,
+		enum_LogLevel_ERROR,
+		enum_LogLevel_WARNING,
+		enum_LogLevel_INFO,
+		enum_LogLevel_DEBUG,
+	}enum_LogLevel;
+
 	//INI 기능
 	const wchar_t* INI_No_Result = L"No Result";
 #pragma endregion
@@ -77,7 +87,12 @@ public:
 	bool Log_Add_Quick(string str, int time_unit = enum_TimeUnit_sec);
 	bool Log_Add_Stopwatch(int index, int time_unit = enum_TimeUnit_millisec);
 	bool Log_Endline();
-
+	
+	//로그 함수2
+	
+	bool FuncLog_Init();
+	bool FuncLog_Add(const char * __func, const char* __filename, int __line, int LogLevel = enum_LogLevel_INFO, string msg = "");
+	bool FuncLog_SetLogLevel(int LogLevel = enum_LogLevel_INFO);
 
 	//timer 기능
 	bool Stopwatch_Check_Startpoint();
